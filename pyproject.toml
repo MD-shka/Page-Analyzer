@@ -5,7 +5,7 @@ description = ""
 authors = ["Mikhail Egorov <pe.egorov@gmail.com>"]
 readme = "README.md"
 packages = [
-  { include = "python-project-83" },
+  { include = "page_analyzer" },
 ]
 
 [tool.poetry.dependencies]
