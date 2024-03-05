@@ -12,3 +12,22 @@ start:
 
 lint:
 	poetry run flake8 page_analyzer
+
+test:
+	poetry run pytest
+
+test-coverage:
+	poetry run pytest --cov=gendiff --cov-report xml
+
+test-coverage-percent:
+	pytest -vv --cov=/home/project_gendiff/python-project-50 --cov-report term-missing
+
+rec:
+	asciinema rec
+
+selfcheck:
+	poetry check
+
+check: selfcheck test lint
+
+.PHONY: install test lint selfcheck check build
