@@ -8,26 +8,26 @@ dev:
 	poetry run flask --app page_analyzer:app run
 
 start:
-	poetry run gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
+	poetry run gunicorn -w 5 -b 127.0.0.1:$(PORT) page_analyzer:app
 
 lint:
 	poetry run flake8 page_analyzer
 
-# test:
-# 	poetry run pytest
+test:
+	poetry run pytest
 
-# test-coverage:
-#	poetry run pytest --cov=gendiff --cov-report xml
+ test-coverage:
+	poetry run pytest --cov=page_analyzer --cov-report xml
 
-# test-coverage-percent:
-# 	pytest -vv --cov=/home/project_gendiff/python-project-50 --cov-report term-missing
+test-coverage-percent:
+	pytest -vv --cov=/home/project_page_analyzer/python-project-83 --cov-report term-missing
 
 rec:
 	asciinema rec
 
-# selfcheck:
-# 	poetry check
+selfcheck:
+	poetry check
 
-# check: selfcheck test lint
+ check: selfcheck test lint
 
-.PHONY: install test lint selfcheck check build
+.PHONY: install test lint selfcheck check
