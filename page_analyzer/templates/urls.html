@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container-lg mt-3 text-light">
+    <h1>Сайты</h1>
+    <div class="table-responsive">
+        <table class="table table-bordered text-nowrap text-light" data-test="urls">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Имя</th>
+                <th>Последняя проверка</th>
+                <th>Код ответа</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for url in urls %}
+            <tr>
+                <td>{{ url.id }}</td>
+                <td><a href="/urls/{{ url.id }}">{{ url.name }}</a></td>
+                <td>{{ url.last_check if url.last_check else '' }}</td>
+                <td>{{ url.status_code if url.status_code else '' }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
