@@ -13,21 +13,23 @@ def connect():
     return psycopg2.connect(DATABASE_URL)
 
 
-def is_unique_url(url):
+def make_request(request, params):
     with connect() as conn:
         curs = conn.cursor(cursor_factory=NamedTupleCursor)
-        curs.execute('SELECT * FROM urls WHERE name=%s;', (url,))
+        curs.execute(request, params)
         result = curs.fetchone()
+    return result
+
+
+def is_unique_url(url):
+    result = make_request('SELECT * FROM urls WHERE name=%s;', (url,))
     if result:
         return False
     return True
 
 
 def get_url(id):
-    with connect() as conn:
-        curs = conn.cursor(cursor_factory=NamedTupleCursor)
-        curs.execute('SELECT * FROM urls WHERE id=%s;', (id,))
-        result = curs.fetchone()
+    result = make_request('SELECT * FROM urls WHERE id=%s;', (id,))
     return result
 
 
@@ -40,10 +42,7 @@ def get_urls():
 
 
 def get_url_id(url):
-    with connect() as conn:
-        curs = conn.cursor(cursor_factory=NamedTupleCursor)
-        curs.execute('SELECT * FROM urls WHERE name=%s;', (url,))
-        result = curs.fetchone()
+    result = make_request('SELECT * FROM urls WHERE name=%s;', (url,))
     return result.id
 
 
