@@ -66,7 +66,7 @@ def add_url():
             message=get_flashed_messages(with_categories=True)
         ), 422
     name_url = url_normalization(url)
-    if is_unique_url(name_url):
+    if not is_unique_url(name_url):
         flash('Страница успешно добавлена', 'success')
         add_new_url(name_url)
     else:
