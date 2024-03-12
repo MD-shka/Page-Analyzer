@@ -15,7 +15,9 @@ from .db_requests import (
     get_url_id,
     add_new_url,
     get_urls,
-    get_url
+    get_url,
+    add_check,
+    get_checks
 )
 
 
@@ -33,9 +35,11 @@ def index():
 @app.get("/urls/<int:id>")
 def get_current_url(id):
     url = get_url(id)
+    checks = get_checks(id)
     return render_template(
         'url.html',
         url=url,
+        checks=checks,
         message=get_flashed_messages(with_categories=True)
     )
 
@@ -68,3 +72,9 @@ def add_url():
     else:
         flash('Страница уже существует', 'info')
     return redirect(url_for('get_current_url', id=get_url_id(name_url)))
+
+
+@app.post("/urls/<int:id>/checks")
+def check_url(id):
+    add_check(id)
+    return redirect(url_for('get_current_url', id=id))
