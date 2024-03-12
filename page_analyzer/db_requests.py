@@ -26,16 +26,28 @@ def make_request(*args, fetch=False, **kwargs):
 
 
 def is_unique_url(url):
-    return make_request('SELECT * FROM urls WHERE name=%s;', (url,), fetch="one")
+    return make_request(
+        'SELECT * FROM urls WHERE name=%s;',
+        (url,),
+        fetch="one"
+    )
 
 
 def get_url(id):
-    return make_request('SELECT * FROM urls WHERE id=%s;', (id,), fetch="one")
+    return make_request(
+        'SELECT * FROM urls WHERE id=%s;',
+        (id,),
+        fetch="one"
+    )
+
 
 
 def get_checks(id):
     return make_request(
-        'SELECT * FROM url_checks WHERE url_id=%s ORDER BY url_checks.id DESC;',
+        'SELECT * '
+        'FROM url_checks '
+        'WHERE url_id=%s '
+        'ORDER BY url_checks.id DESC;',
         (id,),
         fetch="every"
     )
@@ -57,17 +69,29 @@ def get_urls():
 
 
 def get_url_id(url):
-    result = make_request("SELECT * FROM urls WHERE name=%s;", (url,), fetch="one")
+    result = make_request(
+        "SELECT * FROM urls WHERE name=%s;",
+        (url,),
+        fetch="one"
+    )
     return result.id
 
 
 def add_new_url(name_url):
-    make_request("INSERT INTO urls (name) VALUES (%s);", (name_url,))
+    make_request(
+        "INSERT INTO urls (name) VALUES (%s);",
+        (name_url,)
+    )
 
 
 def add_check(url_id, status_code=None, h1=None, title=None, description=None):
     make_request(
-        "INSERT INTO url_checks (url_id, status_code, h1, title, description) "
+        "INSERT INTO url_checks ("
+        "url_id, "
+        "status_code, "
+        "h1, "
+        "title, "
+        "description) "
         "VALUES (%s, %s, %s, %s, %s);",
         (url_id, status_code, h1, title, description)
     )
