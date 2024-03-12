@@ -41,7 +41,6 @@ def get_url(id):
     )
 
 
-
 def get_checks(id):
     return make_request(
         'SELECT * '
