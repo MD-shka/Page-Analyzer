@@ -80,10 +80,10 @@ def add_url():
 
 @app.post("/urls/<int:id>/checks")
 def check_url(id):
-    status_code, title, h1, description = get_parse(id)
+    status_code, h1, title, description = get_parse(id)
     if status_code == 200:
         flash('Страница успешно проверена', 'success')
-        add_check(id, status_code, title, h1, description)
+        add_check(id, status_code, h1, title, description)
     else:
         flash('Произошла ошибка при проверке', 'danger')
     return redirect(url_for('get_current_url', id=id))
