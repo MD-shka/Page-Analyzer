@@ -13,7 +13,7 @@ def connect():
     return psycopg2.connect(DATABASE_URL)
 
 
-def make_request(*args, fetch=False, **kwargs):
+def make_request(*args, fetch=None, **kwargs):
     with connect() as conn:
         curs = conn.cursor(cursor_factory=NamedTupleCursor)
         curs.execute(*args, **kwargs)
@@ -34,11 +34,7 @@ def is_unique_url(url):
 
 
 def get_url(id):
-    return make_request(
-        'SELECT * FROM urls WHERE id=%s;',
-        (id,),
-        fetch="one"
-    )
+    return make_request('SELECT * FROM urls WHERE id=%s;', (id,), fetch="one")
 
 
 def get_checks(id):
@@ -54,13 +50,11 @@ def get_checks(id):
 
 def get_urls():
     return make_request(
-        "SELECT "
-        "urls.id AS id, "
+        "SELECT urls.id AS id, "
         "urls.name AS name, "
         "MAX(url_checks.created_at) AS last_check, "
         "url_checks.status_code AS status_code "
-        "FROM urls "
-        "JOIN url_checks ON urls.id = url_checks.url_id "
+        "FROM urls LEFT JOIN url_checks ON urls.id = url_checks.url_id "
         "GROUP BY urls.id, urls.name, url_checks.status_code "
         "ORDER BY urls.id DESC;",
         fetch="every"
@@ -77,13 +71,10 @@ def get_url_id(url):
 
 
 def add_new_url(name_url):
-    make_request(
-        "INSERT INTO urls (name) VALUES (%s);",
-        (name_url,)
-    )
+    make_request("INSERT INTO urls (name) VALUES (%s);", (name_url,))
 
 
-def add_check(url_id, status_code=None, h1=None, title=None, description=None):
+def add_check(url_id, status_code, h1=None, title=None, description=None):
     make_request(
         "INSERT INTO url_checks ("
         "url_id, "
