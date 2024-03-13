@@ -7,7 +7,8 @@ from flask import (
     flash,
     get_flashed_messages,
     redirect,
-    url_for
+    url_for,
+    abort
 )
 from .url_validation import url_validation, url_normalization
 from .db_requests import (
@@ -37,6 +38,8 @@ def index():
 def get_current_url(id):
     url = get_url(id)
     checks = get_checks(id)
+    if url is None:
+        abort(404)
     return render_template(
         'url.html',
         url=url,
@@ -84,3 +87,8 @@ def check_url(id):
     else:
         flash('Произошла ошибка при проверке', 'danger')
     return redirect(url_for('get_current_url', id=id))
+
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('error_404.html'), 404
