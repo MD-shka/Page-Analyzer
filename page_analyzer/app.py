@@ -19,7 +19,7 @@ from .db_requests import (
     add_check,
     get_checks
 )
-from .parser import get_status_code
+from .parser import get_parse
 
 
 load_dotenv()
@@ -77,10 +77,10 @@ def add_url():
 
 @app.post("/urls/<int:id>/checks")
 def check_url(id):
-    status_code = get_status_code(id)
+    status_code, title, h1, description = get_parse(id)
     if status_code == 200:
         flash('Страница успешно проверена', 'success')
-        add_check(id, status_code)
+        add_check(id, status_code, title, h1, description)
     else:
         flash('Произошла ошибка при проверке', 'danger')
     return redirect(url_for('get_current_url', id=id))

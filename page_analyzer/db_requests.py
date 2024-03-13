@@ -1,6 +1,6 @@
-import os
 import psycopg2
 from psycopg2.extras import NamedTupleCursor
+import os
 from dotenv import load_dotenv
 
 
@@ -74,7 +74,7 @@ def add_new_url(name_url):
     make_request("INSERT INTO urls (name) VALUES (%s);", (name_url,))
 
 
-def add_check(url_id, status_code, h1=None, title=None, description=None):
+def add_check(url_id, status_code, h1, title, description):
     make_request(
         "INSERT INTO url_checks ("
         "url_id, "
