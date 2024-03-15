@@ -39,7 +39,7 @@ def get_current_url(id):
     url = get_url(id)
     checks = get_checks(id)
     if url is None:
-        abort(404)
+        page_not_found(404)
     return render_template(
         'url.html',
         url=url,
