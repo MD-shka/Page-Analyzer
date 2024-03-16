@@ -1,6 +1,6 @@
 import pytest
 from page_analyzer.app import app as flask_app
-from page_analyzer.db_requests import DATABASE_URL
+
 
 @pytest.fixture
 def app():
