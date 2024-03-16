@@ -28,7 +28,7 @@ jobs:
         if: github.ref_name == 'main'
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL: postgres://page_analyzer_db_16ei_user:CIlFdhxxRTQSKRHigvi8Ul7oTvAHyJnj@dpg-cnlcni21hbls7393mltg-a.singapore-postgres.render.com/page_analyzer_db_16ei
         with:
           coverageCommand: make test-coverage
           debug: true
