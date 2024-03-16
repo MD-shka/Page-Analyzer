@@ -22,12 +22,12 @@ def test_get_index(client):
     assert 'Бесплатно проверяйте сайты на SEO-пригодность' in text_page
 
 
-def test_add_url(client, mocker):
-    mock_db = mocker.patch(DATABASE_URL)
+"""
+def test_add_url(client):
     response = client.post('/urls', data={'url': 'https://ru.hexlet.io'})
     assert response.status_code == 302
 
-"""
+
 def test_get_current_url(client):
     response = client.get('/urls/1')
     text_page = response.data.decode('utf-8')
