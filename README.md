@@ -11,4 +11,4 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/0e8ced7e1dd7162010e7/test_coverage)](https://codeclimate.com/github/MD-shka/python-project-83/test_coverage)
 
 ### Website:
-https://python-project-83-2ekx.onrender.com/
+https://page-analyzer-7qot.onrender.com
