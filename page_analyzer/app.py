@@ -7,8 +7,7 @@ from flask import (
     flash,
     get_flashed_messages,
     redirect,
-    url_for,
-    abort
+    url_for
 )
 from .url_validation import url_validation, url_normalization
 from .db_requests import (
