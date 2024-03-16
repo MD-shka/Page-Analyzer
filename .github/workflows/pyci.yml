@@ -19,7 +19,10 @@ jobs:
       - name: Install dependencies
         run: |
           pip install poetry
-          make build
+          make install
+          echo $DATABASE_URL
+          curl $DATABASE_URL
+          psql -a -d $DATABASE_URL -f database.sql
       - name: Run linter and pytest
         run: |
           make check
