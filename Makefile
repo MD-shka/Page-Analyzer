@@ -13,7 +13,7 @@ dev:
 start:
 	poetry run gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
 
-server_start:
+server-start:
 	gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
 
 lint:
