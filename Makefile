@@ -14,7 +14,7 @@ start:
 	poetry run gunicorn -w 5 -b 127.0.0.1:$(PORT) page_analyzer:app
 
 server-start:
-	gunicorn -w 5 -b 127.0.0.1:$(PORT) page_analyzer:app
+	gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
 
 lint:
 	poetry run flake8 page_analyzer
