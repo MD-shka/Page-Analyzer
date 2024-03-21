@@ -1,20 +1,13 @@
 import psycopg2
 from psycopg2.extras import NamedTupleCursor
-import os
-from dotenv import load_dotenv
 
 
-load_dotenv()
-
-DATABASE_URL = os.getenv('DATABASE_URL')
-
-
-def connect():
-    return psycopg2.connect(DATABASE_URL)
+def connect(db_url):
+    return psycopg2.connect(db_url)
 
 
-def make_request(*args, fetch=None, **kwargs):
-    with connect() as conn:
+def make_request(db_url, *args, fetch=None, **kwargs):
+    with connect(db_url) as conn:
         curs = conn.cursor(cursor_factory=NamedTupleCursor)
         curs.execute(*args, **kwargs)
         if fetch:
@@ -25,20 +18,27 @@ def make_request(*args, fetch=None, **kwargs):
         return None
 
 
-def is_unique_url(url):
+def is_unique_url(db_url, url):
     return make_request(
+        db_url,
         'SELECT * FROM urls WHERE name=%s;',
         (url,),
         fetch="one"
     )
 
 
-def get_url(id):
-    return make_request('SELECT * FROM urls WHERE id=%s;', (id,), fetch="one")
-
-
-def get_checks(id):
+def get_url(db_url, id):
     return make_request(
+        db_url,
+        'SELECT * FROM urls WHERE id=%s;',
+        (id,),
+        fetch="one"
+    )
+
+
+def get_checks(db_url, id):
+    return make_request(
+        db_url,
         'SELECT * '
         'FROM url_checks '
         'WHERE url_id=%s '
@@ -48,8 +48,9 @@ def get_checks(id):
     )
 
 
-def get_urls():
+def get_urls(db_url):
     return make_request(
+        db_url,
         "SELECT urls.id AS id, "
         "urls.name AS name, "
         "MAX(url_checks.created_at) AS last_check, "
@@ -61,8 +62,9 @@ def get_urls():
     )
 
 
-def get_url_id(url):
+def get_url_id(db_url, url):
     result = make_request(
+        db_url,
         "SELECT * FROM urls WHERE name=%s;",
         (url,),
         fetch="one"
@@ -70,12 +72,13 @@ def get_url_id(url):
     return result.id
 
 
-def add_new_url(name_url):
-    make_request("INSERT INTO urls (name) VALUES (%s);", (name_url,))
+def add_new_url(db_url, name_url):
+    make_request(db_url, "INSERT INTO urls (name) VALUES (%s);", (name_url,))
 
 
-def add_check(url_id, status_code, h1, title, description):
+def add_check(db_url, url_id, status_code, h1, title, description):
     make_request(
+        db_url,
         "INSERT INTO url_checks ("
         "url_id, "
         "status_code, "

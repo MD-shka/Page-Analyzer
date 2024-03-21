@@ -24,6 +24,8 @@ from .parser import get_parse
 
 load_dotenv()
 
+DATABASE_URL = os.getenv('DATABASE_URL')
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
@@ -35,8 +37,8 @@ def index():
 
 @app.get("/urls/<int:id>")
 def get_current_url(id):
-    url = get_url(id)
-    checks = get_checks(id)
+    url = get_url(DATABASE_URL, id)
+    checks = get_checks(DATABASE_URL, id)
     if url is None:
         page_not_found(404)
     return render_template(
@@ -49,7 +51,7 @@ def get_current_url(id):
 
 @app.get("/urls")
 def get_list_urls():
-    urls = get_urls()
+    urls = get_urls(DATABASE_URL)
     return render_template(
         'urls.html',
         urls=urls,
@@ -69,20 +71,20 @@ def add_url():
             message=get_flashed_messages(with_categories=True)
         ), 422
     name_url = url_normalization(url)
-    if not is_unique_url(name_url):
+    if not is_unique_url(DATABASE_URL, name_url):
         flash('Страница успешно добавлена', 'success')
-        add_new_url(name_url)
+        add_new_url(DATABASE_URL, name_url)
     else:
         flash('Страница уже существует', 'info')
-    return redirect(url_for('get_current_url', id=get_url_id(name_url)))
+    return redirect(url_for('get_current_url', id=get_url_id(DATABASE_URL, name_url)))
 
 
 @app.post("/urls/<int:id>/checks")
 def check_url(id):
-    status_code, h1, title, description = get_parse(id)
+    status_code, h1, title, description = get_parse(DATABASE_URL, id)
     if status_code == 200:
         flash('Страница успешно проверена', 'success')
-        add_check(id, status_code, h1, title, description)
+        add_check(DATABASE_URL, id, status_code, h1, title, description)
     else:
         flash('Произошла ошибка при проверке', 'danger')
     return redirect(url_for('get_current_url', id=id))

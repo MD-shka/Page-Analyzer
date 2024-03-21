@@ -17,7 +17,7 @@
             {% for url in urls %}
             <tr>
                 <td>{{ url.id }}</td>
-                <td><a href="/urls/{{ url.id }}">{{ url.name }}</a></td>
+                <td><a href="{{ url_for('get_current_url', id=url.id) }}">{{ url.name }}</a></td>
                 <td>{{ url.last_check if url.last_check else '' }}</td>
                 <td>{{ url.status_code if url.status_code else '' }}</td>
             </tr>
