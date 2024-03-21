@@ -9,17 +9,12 @@ from flask import (
     redirect,
     url_for
 )
-from .url_validation import url_validation, url_normalization
-from .db_requests import (
-    is_unique_url,
-    get_url_id,
-    add_new_url,
-    get_urls,
-    get_url,
-    add_check,
-    get_checks
+from .services import (
+    get_current_url_data,
+    get_list_urls_data,
+    add_url_data,
+    check_url_data
 )
-from .parser import get_parse
 
 
 load_dotenv()
@@ -37,8 +32,7 @@ def index():
 
 @app.get("/urls/<int:id>")
 def get_current_url(id):
-    url = get_url(DATABASE_URL, id)
-    checks = get_checks(DATABASE_URL, id)
+    url, checks = get_current_url_data(DATABASE_URL, id)
     if url is None:
         page_not_found(404)
     return render_template(
@@ -51,7 +45,7 @@ def get_current_url(id):
 
 @app.get("/urls")
 def get_list_urls():
-    urls = get_urls(DATABASE_URL)
+    urls = get_list_urls_data(DATABASE_URL)
     return render_template(
         'urls.html',
         urls=urls,
@@ -62,31 +56,21 @@ def get_list_urls():
 @app.post("/urls")
 def add_url():
     url = request.form['url']
-    error_message = url_validation(url)
-    if error_message:
-        flash(error_message, 'danger')
-        return render_template(
-            'index.html',
-            url=url,
-            message=get_flashed_messages(with_categories=True)
-        ), 422
-    name_url = url_normalization(url)
-    if not is_unique_url(DATABASE_URL, name_url):
-        flash('Страница успешно добавлена', 'success')
-        add_new_url(DATABASE_URL, name_url)
-    else:
-        flash('Страница уже существует', 'info')
-    return redirect(url_for('get_current_url', id=get_url_id(DATABASE_URL, name_url)))
+    url_id, message, category = add_url_data(DATABASE_URL, url)
+    flash(message, category)
+    if url_id:
+        return redirect(url_for('get_current_url', id=url_id))
+    return render_template(
+        'index.html',
+        url=url,
+        message=get_flashed_messages(with_categories=True)
+    ), 422
 
 
 @app.post("/urls/<int:id>/checks")
 def check_url(id):
-    status_code, h1, title, description = get_parse(DATABASE_URL, id)
-    if status_code == 200:
-        flash('Страница успешно проверена', 'success')
-        add_check(DATABASE_URL, id, status_code, h1, title, description)
-    else:
-        flash('Произошла ошибка при проверке', 'danger')
+    message, category = check_url_data(DATABASE_URL, id)
+    flash(message, category)
     return redirect(url_for('get_current_url', id=id))
 
 
