@@ -1,14 +1,22 @@
 import psycopg2
 from psycopg2.extras import NamedTupleCursor
+from contextlib import contextmanager
 
 
+@contextmanager
 def connect(db_url):
-    return psycopg2.connect(db_url)
+    conn = psycopg2.connect(db_url)
+    curs = conn.cursor(cursor_factory=NamedTupleCursor)
+    try:
+        yield curs
+    finally:
+        conn.commit()
+        curs.close()
+        conn.close()
 
 
 def make_request(db_url, *args, fetch=None, **kwargs):
-    with connect(db_url) as conn:
-        curs = conn.cursor(cursor_factory=NamedTupleCursor)
+    with connect(db_url) as curs:
         curs.execute(*args, **kwargs)
         if fetch:
             if fetch == "every":
