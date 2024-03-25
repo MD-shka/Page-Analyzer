@@ -7,7 +7,8 @@ from flask import (
     flash,
     get_flashed_messages,
     redirect,
-    url_for
+    url_for,
+    abort
 )
 from .services import (
     get_current_url_data,
@@ -34,7 +35,7 @@ def index():
 def get_current_url(id):
     url, checks = get_current_url_data(DATABASE_URL, id)
     if url is None:
-        page_not_found(404)
+        abort(404)
     return render_template(
         'url.html',
         url=url,

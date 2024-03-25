@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "hexlet-code"
 version = "0.1.0"
-description = ""
+description = "website that analyzes specified pages for SEO suitability."
 authors = ["Mikhail Egorov <pe.egorov@gmail.com>"]
 readme = "README.md"
 packages = [
