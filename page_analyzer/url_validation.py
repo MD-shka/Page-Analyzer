@@ -4,8 +4,8 @@ from urllib.parse import urlparse, urlunparse
 
 def url_normalization(url):
     url_parse = urlparse(url)
-    url_name = urlunparse((url_parse.scheme, url_parse.netloc, '', '', '', '')).lower()
-    return url_name
+    url_name = urlunparse((url_parse.scheme, url_parse.netloc, '', '', '', ''))
+    return url_name.lower()
 
 
 def url_validation(url):
